@@ -7,7 +7,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("/mnt/bmh01-rds/Pate_bmbr/project1")
+setwd("PATH/TO/PROJECT")
 
 ### Source functions and prelim
 R.func.sources = list.files("R", full.names = TRUE)
@@ -41,6 +41,31 @@ print(paste("valid num = ", valid_num))
 df_valid_mstate <- readRDS(paste("data/dgm", dgm, "_df_valid_mstate", scenario, ".rds", sep = ""))
 df_valid_raw <- readRDS(paste("data/dgm", dgm, "_df_valid_raw", scenario, ".rds", sep = ""))
 
+### Extract the transition matrix from the multistate data
+tmat <- attr(df_valid_mstate, "trans")
+
+### Identify the from-state and to-state for each permitted transition
+transition_positions <- which(tmat > 0, arr.ind = TRUE)
+
+### Order the state pairs by their numbered transitions
+transition_positions <- transition_positions[order(tmat[transition_positions]),,drop = FALSE]
+
+### Construct the corresponding transition-specific predictor names
+transition_predictors <- paste0("x", transition_positions[, "from"], transition_positions[, "to"])
+
+### Confirm that transition numbers and predictors are correctly aligned
+stopifnot(
+  identical(
+    as.integer(tmat[transition_positions]),
+    seq_along(transition_predictors)
+  )
+)
+
+### Confirm that all required predictors are available
+stopifnot(
+  all(transition_predictors %in% names(df_valid_mstate))
+)
+
 ### Read in the model
 msm_flexsurv_fit <- readRDS(paste("data/dgm", dgm, "_msm_flexsurv_fit", devel_num, ".rds", sep = ""))
 
@@ -51,7 +76,7 @@ calib_object_csh <- readRDS(paste0("data/calib_object_csh_dgm",dgm,"_s",scenario
 ### These numbers correspond to the elements of the model fit object
 ### Note an ICI > 0.1 is not a good choice for whether to update or not. This is just a threshold above/below
 ### which we know the ICI of the cause-specific hazard models lie depending on whether there was a shift or not.
-### This choice is threfore simply to implement the analyes in this simulation.
+### This threshold is used only to implement the model updating strategy in this simulation.
 transitions_update <- which(sapply(calib_object_csh, function(x) {
   x$ICI > 0.1
 }))
@@ -60,42 +85,54 @@ transitions_update <- which(sapply(calib_object_csh, function(x) {
 ### it's just updating one).
 ### We only update scale and shape (or just rate for exponential), leaving coefficients untouched, 
 ### but these could also be updated by altering the fixedpars argument.
+### Update transitions selected from the cause-specific calibration results
 if (length(transitions_update) > 0){
+
   for (transition in transitions_update){
-    
-    ### Create initial vector with terms on correct scale
+
+    ### Select the unique predictor corresponding to this transition
+    unique_predictor <- transition_predictors[transition]
+
+    ### Construct the correctly specified transition model
+    update_formula <- stats::reformulate(
+      c("xa", "xb", unique_predictor),
+      response = "survival::Surv(time, status)"
+    )
+
+    ### Extract starting values from the development model
     inits_vec <- coef(msm_flexsurv_fit[[transition]])
-    
-    ### DGM-1 development models 1-4 were fitted as exponential
+
+    ### Update exponential DGM1 development models
     if (dgm == 1 && devel_num %in% 1:4){
-      
+
       ### Put the exponential rate onto its natural scale
       inits_vec[1] <- exp(inits_vec[1])
-      
-      ### Re-estimate the rate while fixing xa and xb
+
+      ### Re-estimate the rate while fixing xa, xb and the unique predictor
       msm_flexsurv_fit[[transition]] <- flexsurv::flexsurvreg(
-        survival::Surv(time, status) ~ xa + xb,
-        subset = (trans == transition),
+        update_formula,
+        subset = trans == transition,
         data = df_valid_mstate,
         dist = "exp",
         inits = inits_vec,
-        fixedpars = c(2,3)
+        fixedpars = c(2, 3, 4)
       )
-      ### All other development models fitted as Weibull
+
     } else {
-      ### Put shape and scale onto natural scales
-      inits_vec[c(1,2)] <- exp(inits_vec[c(1,2)])
-      
-      ## Update model
+
+      ### Put Weibull shape and scale onto their natural scales
+      inits_vec[c(1, 2)] <- exp(inits_vec[c(1, 2)])
+
+      ### Re-estimate shape and scale while fixing all three coefficients
       msm_flexsurv_fit[[transition]] <- flexsurv::flexsurvreg(
-        survival::Surv(time, status) ~ xa + xb,
-        subset = (trans == transition),
+        update_formula,
+        subset = trans == transition,
         data = df_valid_mstate,
         dist = "weibullPH",
-        inits = inits_vec,   # start from original fit
-        fixedpars = c(3, 4)                     # fix xa, xb;
-      )}
-    
+        inits = inits_vec,
+        fixedpars = c(3, 4, 5)
+      )
+    }
   }
 }
 
@@ -175,7 +212,7 @@ tp <- lapply(FUN = est_risk_flexsurv,
              tmat = tmat, 
              msm_fit = msm_flexsurv_fit,
              t_vec = c(2.5, 5, 7.5),
-             m_iter = 10000)
+             m_iter = 50000)
 
 ## Turn into data.frame
 tp <- 
@@ -238,8 +275,6 @@ estimate_calibration_tp <- function(t_in){
   ### Save plot
   ## First need to get number of states that can be reached
   ## Going to assign this manually
-  
-  # Get number of transitions
   if (dgm == 1){
     states_n <- 3
   } else {

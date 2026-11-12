@@ -1,0 +1,167 @@
+---
+title: "Supplementary data file 1 - results"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+    number_sections: TRUE
+    toc: TRUE
+    toc_depth: 4
+---
+
+**Associated manuscript: Diagnosing miscalibration in multistate models**
+
+We present calibration plots for every scenario. Section 1 is for non-updated models, and section 2 is for updated models.
+
+```{r setup, include=FALSE}
+library(knitr)
+```
+
+```{r, echo=FALSE}
+### Define t
+t_in <- 5
+```
+
+```{r, echo=FALSE, results='asis'}
+### Create counter for Figure numbers
+fignum <- 1
+
+### Create number of scenarios for dgm
+scenarios_per_dgm <- c(40, 6, 8, 10)
+
+### Loop through whether model updated or not
+for (model_updated in 1:2){
+  
+  cat(paste0("\n\n# ", 
+             c("Calibration plots", 
+               "Calibration plots for updated models after data distribution shifts")[model_updated], "\n\n"))
+  
+  ### Loop through DGMs
+  for (dgm in 1:4){
+    
+    cat(paste0("\n\n## DGM-", dgm, "\n\n"))
+    
+    cat(paste0("![](Figure_1_DGM", dgm, ".png){width=80%}\n\n"))
+    
+    ### Loop through scenarios and paste Figures
+    for (scenario in 1:scenarios_per_dgm[dgm]) {
+      
+      ### Read in data.frame with the simulation inputs
+      sim_inputs <- readRDS(paste("../data/sim_inputs_dgm", dgm, ".rds", sep = ""))
+      
+      ### Extract development and validation scenario numbers
+      devel_num <- as.numeric(sim_inputs[scenario, "devel_num"])
+      valid_num <- as.numeric(sim_inputs[scenario, "valid_num"])
+      
+      ### Get figures name
+      if (model_updated == 1){
+        fig_name  <- paste0("../figures/calib_plot_comb_DGM",dgm,"_s",scenario,"_t",t_in,".png")
+      } else if (model_updated == 2){
+        fig_name  <- paste0("../figures/calib_plot_comb_model_updated_DGM",dgm,"_s",scenario,"_t",t_in,".png")
+      }
+      
+      ### Print sub-title for validation scenario group (conditional) and Figure
+      if (dgm == 1){
+        
+        # Scenario group
+        if ((scenario - 1) %% 8 == 0) {
+          cat(paste0("\n\n### Validation scenario V",  dgm, ".", valid_num, " (",
+                     c("Equal to development", 
+                       "shift in transition 1->2", 
+                       "shift in transition 1->3",
+                       "shift in transition 2->3", 
+                       "shift in all transitions")[valid_num], ")", "\n\n"))
+        }
+        
+        # Figure title
+        cat(paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                   c("exponential", "weibull")[ceiling(devel_num/4)], " hazard, ",
+                   c("transitions all equal", 
+                     "faster transition 1->2", 
+                     "faster transition 1->3", 
+                     "faster transition 2->3")[((devel_num - 1) %% 4) + 1], "); ", 
+                   "Validation scenario V", dgm, ".", valid_num, " (",
+                   c("Equal to development", 
+                     "shift in transition 1->2", 
+                     "shift in transition 1->3",
+                     "shift in transition 2->3", 
+                     "shift in all transitions")[valid_num], ")",
+                   "**\n\n"))
+      } else if (dgm == 2){
+        
+        # Scenario group
+        if ((scenario - 1) %% 2 == 0) {
+          cat(paste0("\n\n### Validation scenario V",  dgm, ".", valid_num, " (",
+                     c("shift in transition 1->2", 
+                       "shift in transition 1->4", 
+                       "shift in transition 2->3")[valid_num], ")", "\n\n"))
+        }
+        
+        # Figure title
+        ### Print Figure num
+        cat(paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                   "weibull hazard, ",
+                   c("transitions all equal", "different transition rates out of state 1")[devel_num], "); ", 
+                   "Validation scenario V", dgm, ".", valid_num, " (",
+                   c("shift in transition 1->2", 
+                     "shift in transition 1->4", 
+                     "shift in transition 2->3")[valid_num], ")",
+                   "**\n\n"))
+      } else if (dgm == 3){
+        
+        # Scenario group
+        if ((scenario - 1) %% 2 == 0) {
+          cat(paste0("\n\n### Validation scenario V",  dgm, ".", valid_num, " (",
+                     c("shift in transition 1->2", 
+                       "shift in transition 1->4", 
+                       "shift in transition 2->3", 
+                       "shift in transition 2->4")[valid_num], ")", "\n\n"))
+        }
+        
+        # Figure title
+        cat(paste0("\n\n**Figure S", fignum,": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                   "weibull hazard, ",
+                   c("transitions all equal", "different transition rates out of state 1")[devel_num], "); ",
+                   "Validation scenario V", dgm, ".", valid_num, " (",
+                   c("shift in transition 1->2", 
+                     "shift in transition 1->4", 
+                     "shift in transition 2->3", 
+                     "shift in transition 2->4")[valid_num], ")",
+                   "**\n\n"))
+      } else if (dgm == 4){
+        
+        # Scenario group
+        if ((scenario - 1) %% 2 == 0) {
+          cat(paste0("\n\n### Validation scenario V",  dgm, ".", valid_num, " (",
+                     c("shift in transition 1->2", 
+                       "shift in transition 1->4", 
+                       "shift in transition 2->3", 
+                       "shift in transition 2->4", 
+                       "shift in transition 3->4")[valid_num], ")", "\n\n"))
+        }
+        
+        # Figure title
+        cat(paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                   "weibull hazard, ",
+                   c("transitions all equal", "different transition rates out of state 1")[devel_num], "); ",
+                   "Validation scenario V", dgm, ".", valid_num, " (",
+                   c("shift in transition 1->2",
+                     "shift in transition 1->4", 
+                     "shift in transition 2->3",
+                     "shift in transition 2->4", 
+                     "shift in transition 3->4")[valid_num], ")",
+                   "**\n\n"))
+      }
+      
+      ### Print figures
+      cat(paste0('![](', fig_name,  '){width=100%}\n\n'))
+      
+      cat("---\n\n")
+      
+      ### Add 1 to figure numbers
+      fignum <- fignum + 1
+    }
+  }
+}
+
+```
+

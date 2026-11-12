@@ -4,7 +4,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("/mnt/bmh01-rds/Pate_bmbr/project1")
+setwd("PATH/TO/PROJECT")
 
 ### Extract arguments (dgm and scenario)
 args <- commandArgs(trailingOnly = T)
@@ -88,15 +88,21 @@ cens_beta_xb <- sim_inputs[scenario, "cens_beta_xb"]
 ###
 
 ### Generate baseline data
-### cap xa and xb at 4 to stop extreme values resulting in NA predictions
-x_baseline <- data.frame("xa" = rnorm(n_cohort, 0, 1), "xb" = rnorm(n_cohort, 0, 1)) |>
-  dplyr::mutate(xa = dplyr::case_when(xa > 4 ~ 4,
-                                      xa < -4 ~ -4,
-                                      TRUE ~ xa),
-                xb = dplyr::case_when(xb > 4 ~ 4,
-                                      xb < -4 ~ -4,
-                                      TRUE ~ xb),
-                xasq = xa^2, xbsq = xb^2)
+### Note that x12, x13, x14, x23, x24 and x34 may be unused in some DGMs
+x_baseline <- data.frame("xa" = rnorm(n_cohort, 0, 1), 
+                         "xb" = rnorm(n_cohort, 0, 1), 
+                         "x12" = rnorm(n_cohort, 0, 1), 
+                         "x13" = rnorm(n_cohort, 0, 1), 
+                         "x14" = rnorm(n_cohort, 0, 1), 
+                         "x23" = rnorm(n_cohort, 0, 1), 
+                         "x24" = rnorm(n_cohort, 0, 1), 
+                         "x34" = rnorm(n_cohort, 0, 1)) |>
+  ### cap predictors at 4 to stop extreme values resulting in NA predictions
+  dplyr::mutate(dplyr::across(
+    dplyr::starts_with("x"), ~ pmin(pmax(.x, -4), 4))) |>
+  ### Create non-linear terms
+  dplyr::mutate(xasq = xa^2, xbsq = xb^2)
+
 
 
 ### Assign function for generating transition data

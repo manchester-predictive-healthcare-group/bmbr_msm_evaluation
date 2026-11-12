@@ -7,4 +7,6 @@
 module purge
 module load apps/gcc/R/4.5.0
 
+set -euo pipefail
+
 Rscript p3_gen_data_valid.R 1 ${SLURM_ARRAY_TASK_ID} > p3_gen_data_valid_dgm1.${SLURM_ARRAY_TASK_ID}.out

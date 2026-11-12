@@ -1,15 +1,15 @@
 ### Set working directory
-setwd("/mnt/bmh01-rds/Pate_bmbr/project1")
+setwd("PATH/TO/PROJECT")
 
 ###
 ### Define tmat_list
-### List of transition matricies for each DGM
+### List of transition matrices for each DGM
 ###
 
 ### Clear workspace
 rm(list=ls())
 
-### Create transition matricies
+### Create transition matrices
 tmat1 <- mstate::transMat(x = list(c(2, 3), c(3), c()),
                           names = paste0("state", 1:3))
 
@@ -56,8 +56,8 @@ sim_inputs_dgm1 <- dplyr::mutate(sim_inputs_dgm1,
                                  valid_scale13 = devel_scale13, 
                                  valid_scale23 = devel_scale23,
                                  # Log-hazard ratios are fixed
-                                 beta12_xa = 0.5, beta13_xa = 0.5, beta23_xa = 0.5,
-                                 beta12_xb = -0.5, beta13_xb = -0.5, beta23_xb = -0.5,
+                                 beta12_xa = 0.7, beta13_xa = 0.5, beta23_xa = 0.3,
+                                 beta12_xb = -0.3, beta13_xb = -0.5, beta23_xb = -0.7,
                                  beta12_xasq = 0, beta13_xasq = 0, beta23_xasq = 0,
                                  beta12_xbsq = 0, beta13_xbsq = 0, beta23_xbsq = 0,
                                  # Input parameters for censoring mechanism are fixed
@@ -115,8 +115,8 @@ sim_inputs_dgm2 <- dplyr::mutate(sim_inputs_dgm2,
                                  valid_scale14 = devel_scale14, 
                                  valid_scale23 = devel_scale23,
                                  # Log-hazard ratios are fixed
-                                 beta12_xa = 0.5, beta14_xa = 0.5, beta23_xa = 0.5,
-                                 beta12_xb = -0.5, beta14_xb = -0.5, beta23_xb = -0.5,
+                                 beta12_xa = 0.7, beta14_xa = 0.5, beta23_xa = 0.3,
+                                 beta12_xb = -0.3, beta14_xb = -0.5, beta23_xb = -0.7,
                                  beta12_xasq = 0, beta14_xasq = 0, beta23_xasq = 0,
                                  beta12_xbsq = 0, beta14_xbsq = 0, beta23_xbsq = 0,
                                  # Input parameters for censoring mechanism are fixed
@@ -172,8 +172,8 @@ sim_inputs_dgm3 <- dplyr::mutate(sim_inputs_dgm3,
                                  valid_scale23 = devel_scale23,
                                  valid_scale24 = devel_scale24,
                                  # Log-hazard ratios are fixed
-                                 beta12_xa = 0.5, beta14_xa = 0.5, beta23_xa = 0.5, beta24_xa = 0.5,
-                                 beta12_xb = -0.5, beta14_xb = -0.5, beta23_xb = -0.5, beta24_xb = -0.5,
+                                 beta12_xa = 0.7, beta14_xa = 0.6, beta23_xa = 0.4, beta24_xa = 0.3,
+                                 beta12_xb = -0.3, beta14_xb = -0.4, beta23_xb = -0.6, beta24_xb = -0.7,
                                  beta12_xasq = 0, beta14_xasq = 0, beta23_xasq = 0, beta24_xasq = 0,
                                  beta12_xbsq = 0, beta14_xbsq = 0, beta23_xbsq = 0, beta24_xbsq = 0,
                                  # Input parameters for censoring mechanism are fixed
@@ -235,8 +235,8 @@ sim_inputs_dgm4 <- dplyr::mutate(sim_inputs_dgm4,
                                  valid_scale24 = devel_scale24,
                                  valid_scale34 = devel_scale34,
                                  # Log-hazard ratios are fixed
-                                 beta12_xa = 0.5, beta14_xa = 0.5, beta23_xa = 0.5, beta24_xa = 0.5, beta34_xa = 0.5,
-                                 beta12_xb = -0.5, beta14_xb = -0.5, beta23_xb = -0.5, beta24_xb = -0.5, beta34_xb = -0.5,
+                                 beta12_xa = 0.7, beta14_xa = 0.6, beta23_xa = 0.5, beta24_xa = 0.4, beta34_xa = 0.3,
+                                 beta12_xb = -0.3, beta14_xb = -0.4, beta23_xb = -0.5, beta24_xb = -0.6, beta34_xb = -0.7,
                                  beta12_xasq = 0, beta14_xasq = 0, beta23_xasq = 0, beta24_xasq = 0, beta34_xasq = 0,
                                  beta12_xbsq = 0, beta14_xbsq = 0, beta23_xbsq = 0, beta24_xbsq = 0, beta34_xbsq = 0,
                                  # Input parameters for censoring mechanism are fixed

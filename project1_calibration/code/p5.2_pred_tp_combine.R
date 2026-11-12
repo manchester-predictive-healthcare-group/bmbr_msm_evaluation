@@ -4,7 +4,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("/mnt/bmh01-rds/Pate_bmbr/project1")
+setwd("PATH/TO/PROJECT")
 
 ### Write a function to extract and save for a specific development dataset
 combine_tp <- function(devel_num){

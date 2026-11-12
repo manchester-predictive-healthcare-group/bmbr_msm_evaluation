@@ -1,11 +1,13 @@
 #!/bin/bash --login
 #SBATCH -p multicore
-#SBATCH -t 24:00:00
+#SBATCH -t 2-00:00:00
 #SBATCH -a 1-64
-#SBATCH -n 3
+#SBATCH -n 4
 
 module purge
 module load apps/gcc/R/4.5.0
+
+set -euo pipefail
 
 # --- Define how many scenarios for each DGM ---
 # -a range should be equal to the sum of scenarios_per_dgm

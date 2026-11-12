@@ -7,6 +7,8 @@
 module purge
 module load apps/gcc/R/4.5.0
 
+set -euo pipefail
+
 devel_num=$(( (SLURM_ARRAY_TASK_ID - 1) / 100 + 1 )) # gives 1-2
 set=$(( (SLURM_ARRAY_TASK_ID - 1) % 100 + 1 )) # gives 1-100
 

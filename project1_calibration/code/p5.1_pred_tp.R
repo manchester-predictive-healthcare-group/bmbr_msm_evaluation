@@ -4,7 +4,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("/mnt/bmh01-rds/Pate_bmbr/project1")
+setwd("PATH/TO/PROJECT")
 
 ### Extract arguments
 args <- commandArgs(trailingOnly = T)
@@ -47,7 +47,7 @@ probtrans_out <- lapply(FUN = est_risk_flexsurv, ((set-1)*set_size + 1):(set*set
                         tmat = tmat, 
                         msm_fit = msm_flexsurv_fit,
                         t_vec = c(2.5, 5, 7.5),
-                        m_iter = 10000)
+                        m_iter = 50000)
 
 
 ### Save them

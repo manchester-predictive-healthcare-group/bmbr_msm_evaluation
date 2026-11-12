@@ -7,6 +7,8 @@
 module purge
 module load apps/gcc/R/4.5.0
 
+set -euo pipefail
+
 # --- Define how many scenarios for each DGM ---
 # -a range should be equal to the sum of scenarios_per_dgm
 scenarios_per_dgm=(40 6 8 10)

@@ -5,7 +5,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("/mnt/bmh01-rds/Pate_bmbr/project1")
+setwd("PATH/TO/PROJECT")
 
 ### Source functions and prelim
 R.func.sources = list.files("R", full.names = TRUE)
@@ -79,8 +79,6 @@ estimate_calibration_tp <- function(dgm, scenario, t_in){
   ### Save plot
   ## First need to get number of states that can be reached
   ## Going to assign this manually
-  
-  # Get number of states than can be transitioned into
   if (dgm == 1){
     states_n <- 3
   } else {
