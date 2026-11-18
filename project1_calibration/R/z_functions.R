@@ -1309,7 +1309,7 @@ create_combined_calibration_plot <- function(dgm,
   
   ### Save
   if (isFALSE(model_updated)){
-    ragg::png(
+    ragg::agg_png(
       filename = paste0("figures/calib_plot_comb_DGM",dgm,"_s",scenario,"_t",t_in,".png"),
       width = width_in,
       height = height_in,
@@ -1317,7 +1317,7 @@ create_combined_calibration_plot <- function(dgm,
       res = 90
     )
   } else if (isTRUE(model_updated)){
-    ragg::png(
+    ragg::agg_png(
       filename = paste0("figures/calib_plot_comb_model_updated_DGM",dgm,"_s",scenario,"_t",t_in,".png"),
       width = width_in,
       height = height_in,
@@ -1332,7 +1332,7 @@ create_combined_calibration_plot <- function(dgm,
   ### Save high res figures
   if (isFALSE(model_updated)){
     if (dgm == 1 & devel_num == 5 & valid_num == 2 & t_in == 5){
-      ragg::png(filename = paste0("figures/Figure2.png"),
+      ragg::agg_png(filename = paste0("figures/Figure2.png"),
           width = width_in,
           height = height_in,
           units = "in",
@@ -1340,7 +1340,7 @@ create_combined_calibration_plot <- function(dgm,
       print(final_plot)
       grDevices::dev.off()
     } else if (dgm == 2 & devel_num == 1 & valid_num == 3 & t_in == 5){
-      ragg::png(filename = paste0("figures/Figure3.png"),
+      ragg::agg_png(filename = paste0("figures/Figure3.png"),
           width = width_in,
           height = height_in,
           units = "in",
@@ -1348,7 +1348,7 @@ create_combined_calibration_plot <- function(dgm,
       print(final_plot)
       grDevices::dev.off()
     } else if (dgm == 3 & devel_num == 1 & valid_num == 3 & t_in == 5){
-      ragg::png(filename = paste0("figures/Figure4.png"),
+      ragg::agg_png(filename = paste0("figures/Figure4.png"),
           width = width_in,
           height = height_in,
           units = "in",
@@ -1356,7 +1356,7 @@ create_combined_calibration_plot <- function(dgm,
       print(final_plot)
       grDevices::dev.off()
     } else if (dgm == 4 & devel_num == 1 & valid_num == 3 & t_in == 5){
-      ragg::png(filename = paste0("figures/Figure5.png"),
+      ragg::agg_png(filename = paste0("figures/Figure5.png"),
           width = width_in,
           height = height_in,
           units = "in",

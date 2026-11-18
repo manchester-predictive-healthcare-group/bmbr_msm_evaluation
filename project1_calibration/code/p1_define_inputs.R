@@ -1,5 +1,5 @@
 ### Set working directory
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ###
 ### Define tmat_list

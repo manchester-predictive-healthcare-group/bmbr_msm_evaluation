@@ -4,7 +4,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Define dgm
 dgm <- 2
@@ -35,7 +35,6 @@ for (devel_num in 1:2){
   transition_positions <- transition_positions[order(tmat[transition_positions]),,drop = FALSE]
   
   ### Construct the corresponding unique predictor names
-  ### For DGM1, this produces x12, x13 and x23
   transition_predictors <- paste0(
     "x",
     transition_positions[, "from"],

@@ -5,7 +5,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Source functions and prelim
 R.func.sources = list.files("R", full.names = TRUE)
@@ -38,9 +38,7 @@ estimate_calibration_tp <- function(dgm, scenario, t_in){
   ### Load transition probabilities
   tp <- readRDS(paste("data/dgm", dgm, "_pt_scenario", devel_num, "_all.rds", sep = ""))
   
-  ### A very small number of observations have negative predictions very close to zero (e.g. -7*10^312)
-  ### These are when xa is simulated to be very large
-  ### Set these to close to zero
+  ### Enforce a small positive lower bound as a numerical safeguard
   tp <- dplyr::mutate(
     tp,
     dplyr::across(

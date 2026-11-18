@@ -1,13 +1,13 @@
-### Let's write a program will that do model updating
-
 ###
-### Assess calibration of transition probabilities
-### Arguments are read in at command line so it can be parallelised on CSF
+### Update transition-specific models and reassess calibration.
+###
+### Re-estimate selected baseline-hazard parameters in the validation data,
+### then recalculate cause-specific and transition-probability calibration
 ###
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Source functions and prelim
 R.func.sources = list.files("R", full.names = TRUE)
@@ -28,7 +28,8 @@ t_in <- 5
 ### Read in sim_inputs for the DGM
 sim_inputs <- readRDS(paste("data/sim_inputs_dgm", dgm, ".rds", sep = ""))
 
-### Set seed (set the seed using the scenario?)
+### Set a common seed.
+### Scenario-specific model inputs differ, so the resulting predictions will differ despite using the same random-number stream
 set.seed(101)
 
 ### Read in devel_num and valid_num
@@ -73,19 +74,23 @@ msm_flexsurv_fit <- readRDS(paste("data/dgm", dgm, "_msm_flexsurv_fit", devel_nu
 calib_object_csh <- readRDS(paste0("data/calib_object_csh_dgm",dgm,"_s",scenario,"_t",t_in,".rds"))
 
 ### Get vector for transitions where ICI > 0.1
-### These numbers correspond to the elements of the model fit object
-### Note an ICI > 0.1 is not a good choice for whether to update or not. This is just a threshold above/below
+### These numbers correspond to the elements of the model fit object.
+### 
+### NB: In practice, an ICI > 0.1 is not a good threshold for whether to update or not. This is just a threshold above/below
 ### which we know the ICI of the cause-specific hazard models lie depending on whether there was a shift or not.
 ### This threshold is used only to implement the model updating strategy in this simulation.
+### Model updating strategy should be aligned with clinical problem at hand.
 transitions_update <- which(sapply(calib_object_csh, function(x) {
   x$ICI > 0.1
 }))
 
 ### Update relevant models (note, this could update multiple transitions, but for most simulation scenarios,
 ### it's just updating one).
+###
 ### We only update scale and shape (or just rate for exponential), leaving coefficients untouched, 
 ### but these could also be updated by altering the fixedpars argument.
-### Update transitions selected from the cause-specific calibration results
+###
+### We update transitions selected from the cause-specific calibration results
 if (length(transitions_update) > 0){
 
   for (transition in transitions_update){
@@ -174,8 +179,7 @@ estimate_calibration_csh <- function(t_in){
   plot(calib_object[["plots_comb"]])
   dev.off()
   
-  ### NB: may need to change the following few lines in the future, depending if we make any changes to calib_csh, or est_calib_csh_ph
-  ### Remove the combined plot before saving the output object
+  ### Retain only the transition-specific calibration results and plotting data
   calib_object<- calib_object[["calib_list"]]
   
   ### Reduce the plot list component to just plot data, so plots can be reproduced, but don't want to save all the ggplot stuff which 

@@ -5,7 +5,7 @@
 
 ### Clear workspace and setwd
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Source functions and prelim
 R.func.sources = list.files("R", full.names = TRUE)

@@ -4,7 +4,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Extract arguments (dgm and scenario)
 args <- commandArgs(trailingOnly = T)
@@ -135,7 +135,7 @@ df_valid <- dgm_func(n = n_cohort, #number of patients to simulate
                      beta23_xa = beta23_xa, beta23_xb = beta23_xb, beta23_xasq = beta23_xasq, beta23_xbsq = beta23_xbsq, #covariate effects for transition 2 -> 3
                      beta24_xa = beta24_xa, beta24_xb = beta24_xb, beta24_xasq = beta24_xasq, beta24_xbsq = beta24_xbsq, #covariate effects for transition 2 -> 4
                      beta34_xa = beta34_xa, beta34_xb = beta34_xb, beta34_xasq = beta34_xasq, beta34_xbsq = beta34_xbsq, #covariate effects for transition 3 -> 4
-                     x_in = x_baseline, #baseline predictors, data frame with two columns
+                     x_in = x_baseline, #baseline predictors
                      numsteps = numsteps)
 
 

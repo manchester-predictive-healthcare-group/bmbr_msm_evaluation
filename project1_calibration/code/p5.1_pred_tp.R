@@ -4,7 +4,7 @@
 
 ### Setwd and clear workspace
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Extract arguments
 args <- commandArgs(trailingOnly = T)
@@ -21,16 +21,11 @@ R.func.sources = list.files("R", full.names = TRUE)
 sapply(R.func.sources, source)
 
 ### Read in model fit
-# msm_cox_fit <- readRDS(paste("data/dgm", dgm, "_msm_cox_fit", devel_num, ".rds", sep = ""))
 msm_flexsurv_fit <- readRDS(paste("data/dgm", dgm, "_msm_flexsurv_fit", devel_num, ".rds", sep = ""))
 
-# ### Read in development data (necessary or predict function won't work)
-# df_devel_mstate <- readRDS(paste("data/dgm", dgm, "_df_devel_mstate", devel_num, ".rds", sep = ""))
-# df_devel_raw <- readRDS(paste("data/dgm", dgm, "_df_devel_raw", devel_num, ".rds", sep = ""))
-
 ### Read in validation data
-### Note the values of xa and xb are the same for every validation dataset, meaning so are the predicted risks.
-### We can therefore use the same validation dataset each time, and only need to estimate risks once per development dataset (and developed model)
+### Baseline predictor values are identical across validation scenarios because the same seed is used (predictors stay same, outcomes change)
+### Predicted risks therefore depend only on the development model, so they are calculated once per development dataset.
 df_valid_mstate <- readRDS(paste("data/dgm", dgm, "_df_valid_mstate", 1, ".rds", sep = ""))
 df_valid_raw <- readRDS(paste("data/dgm", dgm, "_df_valid_raw", 1, ".rds", sep = ""))
 
@@ -48,7 +43,6 @@ probtrans_out <- lapply(FUN = est_risk_flexsurv, ((set-1)*set_size + 1):(set*set
                         msm_fit = msm_flexsurv_fit,
                         t_vec = c(2.5, 5, 7.5),
                         m_iter = 50000)
-
 
 ### Save them
 saveRDS(probtrans_out, paste("data/dgm", dgm, "_pt_scenario", devel_num, "_set", set, ".rds", sep = ""))

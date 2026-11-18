@@ -15,7 +15,7 @@ rm(list = ls())
 
 ### Set working directory here
 ### Or use packages such as 'here' package
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Load packages
 library(survival)

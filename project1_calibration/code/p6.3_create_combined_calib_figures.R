@@ -5,7 +5,7 @@
 
 ### Clear workspace and setwd
 rm(list = ls())
-setwd("PATH/TO/PROJECT")
+setwd("PATH/TO/ROOT")
 
 ### Source functions and prelim
 R.func.sources = list.files("R", full.names = TRUE)
@@ -52,17 +52,3 @@ for (dgm in 1:4){
 
 }
 
-### Testers
-# scenario <- 1
-# for (dgm in 2:2){
-# 
-#     print(paste("DGM",dgm,"scenario",scenario))
-# 
-#     create_combined_calibration_plot(
-#       dgm = dgm,
-#       scenario = scenario,
-#       t_in = t_in,
-#       model_updated = FALSE
-#     )
-# 
-#   }
