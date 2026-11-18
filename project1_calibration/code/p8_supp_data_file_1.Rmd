@@ -4,13 +4,15 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:
     number_sections: TRUE
-    toc: TRUE
+    toc: true
     toc_depth: 4
 ---
 
 **Associated manuscript: Diagnosing miscalibration in multistate models**
 
 We present calibration plots for every scenario. Section 1 is for non-updated models, and section 2 is for updated models.
+
+<div id="toc-location"></div>
 
 ```{r setup, include=FALSE}
 library(knitr)
@@ -73,19 +75,19 @@ for (model_updated in 1:2){
         }
         
         # Figure title
-        cat(paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
-                   c("exponential", "weibull")[ceiling(devel_num/4)], " hazard, ",
-                   c("baseline parameters equal across transitions", 
-                     "faster transition 1->2", 
-                     "faster transition 1->3", 
-                     "faster transition 2->3")[((devel_num - 1) %% 4) + 1], "); ", 
-                   "Validation scenario V", dgm, ".", valid_num, " (",
-                   c("Equal to development", 
-                     "shift in transition 1->2", 
-                     "shift in transition 1->3",
-                     "shift in transition 2->3", 
-                     "shift in all transitions")[valid_num], ")",
-                   "**\n\n"))
+        fig_caption <- paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                              c("exponential", "weibull")[ceiling(devel_num/4)], " hazard, ",
+                              c("baseline parameters equal across transitions", 
+                                "faster transition 1->2", 
+                                "faster transition 1->3", 
+                                "faster transition 2->3")[((devel_num - 1) %% 4) + 1], "); ", 
+                              "Validation scenario V", dgm, ".", valid_num, " (",
+                              c("Equal to development", 
+                                "shift in transition 1->2", 
+                                "shift in transition 1->3",
+                                "shift in transition 2->3", 
+                                "shift in all transitions")[valid_num], ")",
+                              "**\n\n")
       } else if (dgm == 2){
         
         # Scenario group
@@ -98,14 +100,14 @@ for (model_updated in 1:2){
         
         # Figure title
         ### Print Figure num
-        cat(paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
-                   "weibull hazard, ",
-                   c("baseline parameters equal across transitions", "different baseline scale parameters out of state 1")[devel_num], "); ", 
-                   "Validation scenario V", dgm, ".", valid_num, " (",
-                   c("shift in transition 1->2", 
-                     "shift in transition 1->4", 
-                     "shift in transition 2->3")[valid_num], ")",
-                   "**\n\n"))
+        fig_caption <- paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                              "weibull hazard, ",
+                              c("baseline parameters equal across transitions", "different baseline scale parameters out of state 1")[devel_num], "); ", 
+                              "Validation scenario V", dgm, ".", valid_num, " (",
+                              c("shift in transition 1->2", 
+                                "shift in transition 1->4", 
+                                "shift in transition 2->3")[valid_num], ")",
+                              "**\n\n")
       } else if (dgm == 3){
         
         # Scenario group
@@ -118,15 +120,15 @@ for (model_updated in 1:2){
         }
         
         # Figure title
-        cat(paste0("\n\n**Figure S", fignum,": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
-                   "weibull hazard, ",
-                   c("baseline parameters equal across transitions", "different baseline scale parameters out of state 1")[devel_num], "); ",
-                   "Validation scenario V", dgm, ".", valid_num, " (",
-                   c("shift in transition 1->2", 
-                     "shift in transition 1->4", 
-                     "shift in transition 2->3", 
-                     "shift in transition 2->4")[valid_num], ")",
-                   "**\n\n"))
+        fig_caption <- paste0("\n\n**Figure S", fignum,": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                              "weibull hazard, ",
+                              c("baseline parameters equal across transitions", "different baseline scale parameters out of state 1")[devel_num], "); ",
+                              "Validation scenario V", dgm, ".", valid_num, " (",
+                              c("shift in transition 1->2", 
+                                "shift in transition 1->4", 
+                                "shift in transition 2->3", 
+                                "shift in transition 2->4")[valid_num], ")",
+                              "**\n\n")
       } else if (dgm == 4){
         
         # Scenario group
@@ -140,22 +142,27 @@ for (model_updated in 1:2){
         }
         
         # Figure title
-        cat(paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
-                   "weibull hazard, ",
-                   c("baseline parameters equal across transitions", "different baseline scale parameters out of state 1")[devel_num], "); ",
-                   "Validation scenario V", dgm, ".", valid_num, " (",
-                   c("shift in transition 1->2",
-                     "shift in transition 1->4", 
-                     "shift in transition 2->3",
-                     "shift in transition 2->4", 
-                     "shift in transition 3->4")[valid_num], ")",
-                   "**\n\n"))
+        fig_caption <- paste0("\n\n**Figure S", fignum, ": DGM ", dgm, "; Development scenario D", dgm, ".", devel_num, " (",
+                              "weibull hazard, ",
+                              c("baseline parameters equal across transitions", "different baseline scale parameters out of state 1")[devel_num], "); ",
+                              "Validation scenario V", dgm, ".", valid_num, " (",
+                              c("shift in transition 1->2",
+                                "shift in transition 1->4", 
+                                "shift in transition 2->3",
+                                "shift in transition 2->4", 
+                                "shift in transition 3->4")[valid_num], ")",
+                              "**\n\n")
       }
       
-      ### Print figures
-      cat(paste0('![](', fig_name,  '){width=100%}\n\n'))
+      ### Print figures followed by caption      
+      cat(paste0('![](', fig_name,  '){width=100%}\n\n',
+                 fig_caption,
+                 "\n\n"))
       
       cat("---\n\n")
+      
+      ### next figure on a new pdf page
+      cat('<div class="page-break"></div>\n\n')
       
       ### Add 1 to figure numbers
       fignum <- fignum + 1
@@ -165,3 +172,14 @@ for (model_updated in 1:2){
 
 ```
 
+<!-- Move TOC to correct place -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const toc = document.getElementById("TOC");
+  const location = document.getElementById("toc-location");
+
+  if (toc && location) {
+    location.appendChild(toc);
+  }
+});
+</script>
